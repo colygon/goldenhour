@@ -17,7 +17,6 @@ export default function MusicPlayer() {
     if (playing) {
       audio.volume = 0;
       audio.play().catch(() => setPlaying(false));
-      // Fade in
       let vol = 0;
       const fade = setInterval(() => {
         vol = Math.min(vol + 0.02, 0.4);
@@ -37,7 +36,7 @@ export default function MusicPlayer() {
       <motion.button
         whileTap={{ scale: 0.9 }}
         onClick={() => setPlaying(!playing)}
-        className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 border border-white/15 backdrop-blur-sm"
+        className="btn-icon backdrop-blur-sm"
         aria-label={playing ? 'Pause music' : 'Play music'}
       >
         {playing ? (
@@ -47,7 +46,7 @@ export default function MusicPlayer() {
             <div className="eq-bar" />
           </div>
         ) : (
-          <span className="text-white/70 text-sm">♪</span>
+          <span className="text-sm">♪</span>
         )}
       </motion.button>
     </>

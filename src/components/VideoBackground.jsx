@@ -10,20 +10,31 @@ const VIDEO_MAP = {
 };
 
 const GRADIENT_MAP = {
-  EPIC: 'bg-tier-epic',
-  GREAT: 'bg-tier-great',
-  DECENT: 'bg-tier-decent',
-  MEH: 'bg-tier-meh',
+  EPIC:      'bg-tier-epic',
+  GREAT:     'bg-tier-great',
+  DECENT:    'bg-tier-decent',
+  MEH:       'bg-tier-meh',
   'SKIP IT': 'bg-tier-skip',
 };
 
-export default function VideoBackground({ tier = 'GREAT' }) {
+const MOON_GRADIENT_MAP = {
+  LEGENDARY: 'bg-moon-legendary',
+  EPIC:      'bg-moon-epic',
+  GREAT:     'bg-moon-great',
+  DECENT:    'bg-moon-decent',
+  MEH:       'bg-moon-meh',
+  SKIP:      'bg-moon-skip',
+};
+
+export default function VideoBackground({ tier = 'GREAT', mode = 'sun' }) {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const videoRef = useRef(null);
 
   const videoSrc = VIDEO_MAP[tier] || VIDEO_MAP.GREAT;
-  const gradientClass = GRADIENT_MAP[tier] || GRADIENT_MAP.GREAT;
+  const gradientClass = mode === 'moon'
+    ? (MOON_GRADIENT_MAP[tier] || MOON_GRADIENT_MAP.DECENT)
+    : (GRADIENT_MAP[tier] || GRADIENT_MAP.GREAT);
 
   useEffect(() => {
     setVideoLoaded(false);
@@ -35,9 +46,9 @@ export default function VideoBackground({ tier = 'GREAT' }) {
       {/* Gradient fallback — always visible behind video */}
       <div className={`absolute inset-0 ${gradientClass} transition-all duration-1000`} />
 
-      {/* Video layer */}
+      {/* Video layer — only in sun mode */}
       <AnimatePresence mode="wait">
-        {!videoError && (
+        {!videoError && mode === 'sun' && (
           <motion.div
             key={tier}
             initial={{ opacity: 0 }}

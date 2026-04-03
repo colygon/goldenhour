@@ -13,7 +13,6 @@ export default function PostUploader({ onClose, lat, lon, sunsetScore }) {
     const f = e.target.files?.[0];
     if (!f) return;
 
-    // Validate
     if (f.size > 200 * 1024 * 1024) {
       alert('File too large (max 200MB)');
       return;
@@ -27,7 +26,6 @@ export default function PostUploader({ onClose, lat, lon, sunsetScore }) {
     if (!file) return;
     setUploading(true);
 
-    // Simulate upload for demo (no Cloudinary configured)
     let p = 0;
     const interval = setInterval(() => {
       p += Math.random() * 20;
@@ -60,11 +58,11 @@ export default function PostUploader({ onClose, lat, lon, sunsetScore }) {
           animate={{ y: 0 }}
           exit={{ y: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-          className="absolute bottom-0 left-0 right-0 bg-[#1a1a1a] rounded-t-3xl p-6 max-w-lg mx-auto"
+          className="sheet absolute"
         >
-          <div className="w-10 h-1 rounded-full bg-white/20 mx-auto mb-6" />
+          <div className="sheet-handle" />
 
-          <h3 className="text-lg font-display font-bold text-white mb-4">
+          <h3 className="text-lg font-display font-bold text-white" style={{ marginBottom: '20px' }}>
             Post your shot
           </h3>
 
@@ -78,33 +76,42 @@ export default function PostUploader({ onClose, lat, lon, sunsetScore }) {
                 onChange={handleFile}
                 className="hidden"
               />
-              <div className="grid grid-cols-2 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <button
                   onClick={() => {
                     fileInputRef.current.setAttribute('capture', 'environment');
                     fileInputRef.current.click();
                   }}
-                  className="py-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+                  className="rounded-[var(--radius-xl)] border text-center transition-colors hover:border-[color:var(--border)]"
+                  style={{
+                    background: 'var(--surface-hover)',
+                    borderColor: 'var(--border-subtle)',
+                    paddingTop: '32px', paddingBottom: '32px',
+                  }}
                 >
-                  <span className="text-2xl block mb-1">📷</span>
-                  <span className="text-sm text-white/60">Take Photo</span>
+                  <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '4px' }}>📷</span>
+                  <span className="text-sm" style={{ color: 'var(--muted-foreground)' }}>Take Photo</span>
                 </button>
                 <button
                   onClick={() => {
                     fileInputRef.current.removeAttribute('capture');
                     fileInputRef.current.click();
                   }}
-                  className="py-8 rounded-2xl bg-white/5 border border-white/10 text-center"
+                  className="rounded-[var(--radius-xl)] border text-center transition-colors hover:border-[color:var(--border)]"
+                  style={{
+                    background: 'var(--surface-hover)',
+                    borderColor: 'var(--border-subtle)',
+                    paddingTop: '32px', paddingBottom: '32px',
+                  }}
                 >
-                  <span className="text-2xl block mb-1">🖼</span>
-                  <span className="text-sm text-white/60">From Library</span>
+                  <span style={{ fontSize: '1.5rem', display: 'block', marginBottom: '4px' }}>🖼</span>
+                  <span className="text-sm" style={{ color: 'var(--muted-foreground)' }}>From Library</span>
                 </button>
               </div>
             </>
           ) : (
-            <div className="space-y-4">
-              {/* Preview */}
-              <div className="relative rounded-2xl overflow-hidden">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div className="relative rounded-[var(--radius-xl)] overflow-hidden">
                 {file?.type.startsWith('video/') ? (
                   <video
                     src={preview}
@@ -122,31 +129,27 @@ export default function PostUploader({ onClose, lat, lon, sunsetScore }) {
                   />
                 )}
                 <button
-                  onClick={() => {
-                    setFile(null);
-                    setPreview(null);
-                  }}
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 flex items-center justify-center text-white/80 text-sm"
+                  onClick={() => { setFile(null); setPreview(null); }}
+                  className="btn-icon absolute top-3 right-3 !bg-black/50 !border-transparent"
+                  aria-label="Remove"
                 >
                   ✕
                 </button>
               </div>
 
-              {/* Caption */}
               <input
                 type="text"
                 value={caption}
                 onChange={(e) => setCaption(e.target.value)}
                 maxLength={120}
                 placeholder="What do you see?"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white text-sm placeholder:text-white/20 focus:outline-none focus:border-white/30"
+                className="input-glass"
               />
 
-              {/* Upload button */}
               <button
                 onClick={handleSubmit}
                 disabled={uploading}
-                className="w-full py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold text-sm relative overflow-hidden disabled:opacity-50"
+                className="btn-primary relative overflow-hidden"
               >
                 {uploading ? (
                   <>

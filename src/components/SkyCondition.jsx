@@ -8,7 +8,8 @@ export default function SkyCondition({ skyLine, tier }) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ delay: 0.8, duration: 0.6 }}
-      className="text-sm italic text-white/60 leading-relaxed max-w-xs mx-auto font-body"
+      className="text-sm italic leading-relaxed max-w-xs mx-auto font-body"
+      style={{ color: 'var(--muted-foreground)' }}
     >
       "{skyLine}"
     </motion.p>

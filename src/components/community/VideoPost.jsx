@@ -7,18 +7,14 @@ export default function VideoPost({ post }) {
   const videoRef = useRef(null);
   const [muted, setMuted] = useState(true);
 
-  // Autoplay on scroll with Intersection Observer
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-        }
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
       },
       { threshold: 0.5 }
     );
@@ -31,7 +27,11 @@ export default function VideoPost({ post }) {
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-2xl overflow-hidden bg-white/5 border border-white/10"
+      className="rounded-[var(--radius-xl)] overflow-hidden border transition-colors hover:border-[color:var(--border)]"
+      style={{
+        background: 'var(--surface-hover)',
+        borderColor: 'var(--border-subtle)',
+      }}
     >
       <div className="relative">
         <video
@@ -44,19 +44,36 @@ export default function VideoPost({ post }) {
         />
         <button
           onClick={() => setMuted(!muted)}
-          className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center text-xs text-white/80"
+          className="btn-icon absolute bottom-3 right-3 !bg-black/50 !border-transparent backdrop-blur-sm"
+          aria-label={muted ? 'Unmute' : 'Mute'}
         >
-          {muted ? '🔇' : '🔊'}
+          <span className="text-sm">{muted ? '🔇' : '🔊'}</span>
         </button>
       </div>
+      {/* Caption overlay on video */}
+      {post.caption && (
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0,
+          background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%)',
+          padding: '32px 14px 48px',
+          pointerEvents: 'none',
+        }}>
+          <p style={{
+            margin: 0,
+            color: '#fff',
+            fontSize: '1.1rem',
+            fontWeight: 700,
+            fontFamily: 'var(--font-display)',
+            lineHeight: 1.25,
+            letterSpacing: '-0.01em',
+            textShadow: '0 1px 8px rgba(0,0,0,0.5)',
+          }}>
+            {post.caption}
+          </p>
+        </div>
+      )}
       <div className="px-3 py-2">
-        {post.caption && (
-          <p className="text-sm text-white/70 line-clamp-2">{post.caption}</p>
-        )}
-        <LocationTag
-          locationName={post.location_name}
-          createdAt={post.created_at}
-        />
+        <LocationTag locationName={post.location_name} createdAt={post.created_at} />
         <ReactionBar postId={post.id} />
       </div>
     </motion.div>

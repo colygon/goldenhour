@@ -11,39 +11,57 @@ export default function PostCard({ post }) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl overflow-hidden bg-white/5 border border-white/10"
+        className="rounded-[var(--radius-xl)] overflow-hidden border transition-colors hover:border-[color:var(--border)]"
+        style={{
+          background: 'var(--surface-hover)',
+          borderColor: 'var(--border-subtle)',
+        }}
       >
-        <button
-          onClick={() => setLightbox(true)}
-          className="w-full block"
-        >
+        {/* Image with caption overlay */}
+        <button onClick={() => setLightbox(true)} className="w-full block relative">
           <img
             src={post.media_url}
             alt={post.caption || 'Sunset photo'}
-            className="w-full aspect-[4/5] object-cover"
+            className="w-full aspect-[4/5] object-cover hover:opacity-95 transition-opacity"
             loading="lazy"
           />
+          {/* Gradient scrim + caption */}
+          {post.caption && (
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 45%, transparent 70%)',
+              display: 'flex', alignItems: 'flex-end',
+              padding: '16px 14px',
+              textAlign: 'left',
+            }}>
+              <p style={{
+                margin: 0,
+                color: '#fff',
+                fontSize: '1.1rem',
+                fontWeight: 700,
+                fontFamily: 'var(--font-display)',
+                lineHeight: 1.25,
+                letterSpacing: '-0.01em',
+                textShadow: '0 1px 8px rgba(0,0,0,0.5)',
+              }}>
+                {post.caption}
+              </p>
+            </div>
+          )}
         </button>
         <div className="px-3 py-2">
-          {post.caption && (
-            <p className="text-sm text-white/70 line-clamp-2">{post.caption}</p>
-          )}
-          <LocationTag
-            locationName={post.location_name}
-            createdAt={post.created_at}
-          />
+          <LocationTag locationName={post.location_name} createdAt={post.created_at} />
           <ReactionBar postId={post.id} />
         </div>
       </motion.div>
 
-      {/* Lightbox */}
       <AnimatePresence>
         {lightbox && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
             onClick={() => setLightbox(false)}
           >
             <motion.img

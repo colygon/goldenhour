@@ -23,7 +23,7 @@ export default function ReactionBar({ postId }) {
         <button
           key={emoji}
           onClick={() => handleReact(emoji)}
-          className={`text-sm px-2 py-0.5 rounded-full transition-colors ${
+          className={`text-base min-w-[44px] h-11 px-3 rounded-full flex items-center justify-center transition-colors ${
             selected === emoji
               ? 'bg-white/15'
               : 'bg-transparent hover:bg-white/5'
@@ -33,7 +33,6 @@ export default function ReactionBar({ postId }) {
         </button>
       ))}
 
-      {/* Float animation */}
       {floatingEmoji && (
         <motion.span
           initial={{ opacity: 1, y: 0 }}

@@ -10,11 +10,12 @@ export default function NearbyBadge({ count = 0, postCount = 0, onTap }) {
       transition={{ delay: 1.0 }}
       whileTap={{ scale: 0.97 }}
       onClick={onTap}
-      className="mx-4 w-[calc(100%-2rem)] py-3 flex items-center justify-center gap-3 text-sm text-white/50 font-body"
+      className="w-full min-h-[44px] flex items-center justify-center gap-3 text-sm font-body"
+      style={{ color: 'var(--muted-foreground)' }}
     >
       {count > 0 && <span>👥 {count} people watching nearby</span>}
       {postCount > 0 && (
-        <span className="text-white/30">
+        <span style={{ color: 'var(--subtle-foreground)' }}>
           · {postCount} shot{postCount !== 1 ? 's' : ''} posted
         </span>
       )}

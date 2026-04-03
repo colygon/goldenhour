@@ -68,15 +68,17 @@ export function useSunsetScore(lat, lon, sunsetTime) {
         setTier(computedTier);
         setSkyLine(line);
 
-        // Cache
+        // Cache keyed by rough location (1° ≈ 111 km) to avoid serving wrong-city data
+        const cacheKey = `gh_score_${Math.round(lat)}_${Math.round(lon)}`;
         localStorage.setItem(
-          'gh_last_score',
+          cacheKey,
           JSON.stringify({ score: computed, tier: computedTier, skyLine: line, timestamp: Date.now() })
         );
       } catch (err) {
         setError(err.message);
-        // Try cached
-        const cached = localStorage.getItem('gh_last_score');
+        // Try cached — only use if it's for the same rough location
+        const cacheKey = `gh_score_${Math.round(lat)}_${Math.round(lon)}`;
+        const cached = localStorage.getItem(cacheKey);
         if (cached) {
           const parsed = JSON.parse(cached);
           setScore(parsed.score);

@@ -9,20 +9,16 @@ export default function ScoreRing({ score = 0, tier }) {
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
 
-  // Count up animation
   useEffect(() => {
     if (score === 0) return;
-    let start = 0;
     const duration = 1500;
     const startTime = performance.now();
 
     const animate = (now) => {
       const elapsed = now - startTime;
       const t = Math.min(elapsed / duration, 1);
-      // Ease out cubic
       const eased = 1 - Math.pow(1 - t, 3);
-      const current = Math.round(eased * score);
-      setDisplayScore(current);
+      setDisplayScore(Math.round(eased * score));
       if (t < 1) requestAnimationFrame(animate);
     };
 
@@ -33,7 +29,7 @@ export default function ScoreRing({ score = 0, tier }) {
 
   return (
     <motion.div
-      className={`relative inline-flex items-center justify-center ${isEpic ? 'glow-epic' : ''}`}
+      className={`relative inline-flex items-center justify-center md:scale-125 md:my-4 ${isEpic ? 'glow-epic' : ''}`}
       animate={{ scale: [1, 1.02, 1] }}
       transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
     >
@@ -44,7 +40,7 @@ export default function ScoreRing({ score = 0, tier }) {
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(255,255,255,0.1)"
+          stroke="rgba(255,255,255,0.18)"
           strokeWidth={strokeWidth}
         />
         {/* Progress ring */}
@@ -70,7 +66,9 @@ export default function ScoreRing({ score = 0, tier }) {
         >
           {displayScore}
         </span>
-        <span className="text-xs text-white/50 tracking-wider uppercase">/ 100</span>
+        <span className="text-xs tracking-wider uppercase" style={{ color: 'var(--subtle-foreground)' }}>
+          / 100
+        </span>
       </div>
     </motion.div>
   );

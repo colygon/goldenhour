@@ -12,7 +12,7 @@ function timeAgo(dateStr) {
 
 export default function LocationTag({ locationName, createdAt }) {
   return (
-    <p className="text-xs text-white/40 mt-1.5 truncate">
+    <p className="text-xs mt-2 truncate" style={{ color: 'var(--subtle-foreground)' }}>
       {locationName && (
         <>
           <span>{locationName}</span>
